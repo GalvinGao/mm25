@@ -12,7 +12,6 @@ import {
 } from "@tanstack/react-table";
 import { ArrowDown, ArrowUp, Clock, Eye, ThumbsUp } from "lucide-react";
 import { useState, type FC } from "react";
-import { useAudioPlayer } from "../hooks/useAudioPlayer";
 import AudioPlayer from "./AudioPlayer";
 
 interface SongTableProps {
@@ -23,7 +22,6 @@ const columnHelper = createColumnHelper<Song & { files: File[] }>();
 
 const SongTable: FC<SongTableProps> = ({ songs }) => {
 	const [sorting, setSorting] = useState<SortingState>([]);
-	const { playingSongId, togglePlayPause } = useAudioPlayer();
 
 	const columns = [
 		columnHelper.accessor("title", {
@@ -33,12 +31,17 @@ const SongTable: FC<SongTableProps> = ({ songs }) => {
 				<div className="flex items-center gap-4">
 					<AudioPlayer
 						songId={info.row.original.song_id}
-						isPlaying={playingSongId === info.row.original.song_id}
-						onPlayPause={(songId) =>
-							togglePlayPause(songId, info.row.original.files[0]?.url)
-						}
 						audioUrl={info.row.original.files[0]?.url}
 					/>
+					{info.row.original.thumbnail && (
+						<div className="relative aspect-video w-40 overflow-hidden rounded-lg bg-gray-100">
+							<img
+								src={info.row.original.thumbnail}
+								alt={`${info.getValue()} thumbnail`}
+								className="absolute inset-0 h-full w-full object-cover"
+							/>
+						</div>
+					)}
 					<div className="flex flex-col gap-1">
 						<div className="font-medium text-gray-900">
 							<a
@@ -72,7 +75,9 @@ const SongTable: FC<SongTableProps> = ({ songs }) => {
 				</div>
 			),
 			sortingFn: "alphanumeric",
-			cell: (info) => info.getValue() || "N/A",
+			cell: (info) => (
+				<span className="tabular-nums">{info.getValue() || "N/A"}</span>
+			),
 		}),
 		columnHelper.accessor("viewCount", {
 			header: () => (
@@ -82,7 +87,11 @@ const SongTable: FC<SongTableProps> = ({ songs }) => {
 				</div>
 			),
 			sortingFn: "basic",
-			cell: (info) => info.getValue()?.toLocaleString() || "0",
+			cell: (info) => (
+				<span className="tabular-nums">
+					{info.getValue()?.toLocaleString() || "0"}
+				</span>
+			),
 		}),
 		columnHelper.accessor("likeCount", {
 			header: () => (
@@ -92,7 +101,11 @@ const SongTable: FC<SongTableProps> = ({ songs }) => {
 				</div>
 			),
 			sortingFn: "basic",
-			cell: (info) => info.getValue()?.toLocaleString() || "0",
+			cell: (info) => (
+				<span className="tabular-nums">
+					{info.getValue()?.toLocaleString() || "0"}
+				</span>
+			),
 		}),
 	] as ColumnDef<Song>[];
 
