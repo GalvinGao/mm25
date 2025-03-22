@@ -25,7 +25,7 @@ const SongTable: FC<SongTableProps> = ({ songs }) => {
 
 	const columns = [
 		columnHelper.accessor("title", {
-			header: "Title",
+			header: "タイトル",
 			sortingFn: "alphanumeric",
 			cell: (info) => (
 				<div className="flex items-center gap-4">
@@ -37,7 +37,7 @@ const SongTable: FC<SongTableProps> = ({ songs }) => {
 						<div className="relative aspect-square w-20 overflow-hidden rounded-lg bg-gray-100">
 							<img
 								src={info.row.original.thumbnail}
-								alt={`${info.getValue()} thumbnail`}
+								alt={`${info.getValue()}のサムネイル`}
 								className="absolute inset-0 h-full w-full object-cover"
 							/>
 						</div>
@@ -57,11 +57,11 @@ const SongTable: FC<SongTableProps> = ({ songs }) => {
 							{info.row.original.creatorIcon && (
 								<img
 									src={info.row.original.creatorIcon}
-									alt={`${info.row.original.creatorName}'s icon`}
+									alt={`${info.row.original.creatorName}のアイコン`}
 									className="h-5 w-5 rounded-full object-cover"
 								/>
 							)}
-							{info.row.original.creatorName || "Unknown Artist"}
+							{info.row.original.creatorName || "不明なアーティスト"}
 						</div>
 					</div>
 				</div>
@@ -71,19 +71,19 @@ const SongTable: FC<SongTableProps> = ({ songs }) => {
 			header: () => (
 				<div className="flex items-center gap-1">
 					<Clock className="h-4 w-4" />
-					<span>Duration</span>
+					<span>再生時間</span>
 				</div>
 			),
 			sortingFn: "alphanumeric",
 			cell: (info) => (
-				<span className="tabular-nums">{info.getValue() || "N/A"}</span>
+				<span className="tabular-nums">{info.getValue() || "なし"}</span>
 			),
 		}),
 		columnHelper.accessor("viewCount", {
 			header: () => (
 				<div className="flex items-center gap-1">
 					<Eye className="h-4 w-4" />
-					<span>Views</span>
+					<span>再生回数</span>
 				</div>
 			),
 			sortingFn: "basic",
@@ -97,7 +97,7 @@ const SongTable: FC<SongTableProps> = ({ songs }) => {
 			header: () => (
 				<div className="flex items-center gap-1">
 					<ThumbsUp className="h-4 w-4" />
-					<span>Likes</span>
+					<span>いいね数</span>
 				</div>
 			),
 			sortingFn: "basic",
