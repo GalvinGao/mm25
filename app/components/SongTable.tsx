@@ -43,7 +43,7 @@ const SongTable: FC<SongTableProps> = ({ songs }) => {
 						</div>
 					)}
 					<div className="flex flex-col gap-1">
-						<div className="font-medium text-gray-900">
+						<div className="font-medium text-base text-gray-900">
 							<a
 								href={`https://piapro.jp/t/${info.row.original.song_id}`}
 								target="_blank"
