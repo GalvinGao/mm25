@@ -24,6 +24,21 @@ model Song {
     likeCount   Int?      @map("like_count")
     createdAt   DateTime  @default(now()) @map("created_at")
     updatedAt   DateTime  @default(now()) @map("updated_at")
+    files       File[]
 
     @@map("songs")
+}
+
+model File {
+    id        Int      @id @default(autoincrement()) @map("id")
+    songId    String   @map("song_id")
+    url       String
+    path      String
+    checksum  String?  @db.VarChar(32)
+    status    String?  @db.VarChar(20)
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @default(now()) @map("updated_at")
+    song      Song     @relation(fields: [songId], references: [song_id])
+
+    @@map("files")
 }
