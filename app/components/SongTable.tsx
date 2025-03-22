@@ -34,7 +34,7 @@ const SongTable: FC<SongTableProps> = ({ songs }) => {
 						audioUrl={info.row.original.files[0]?.url}
 					/>
 					{info.row.original.thumbnail && (
-						<div className="relative aspect-video w-40 overflow-hidden rounded-lg bg-gray-100">
+						<div className="relative aspect-square w-20 overflow-hidden rounded-lg bg-gray-100">
 							<img
 								src={info.row.original.thumbnail}
 								alt={`${info.getValue()} thumbnail`}

@@ -14,11 +14,12 @@ export default async function Home() {
 
 	return (
 		<main className="mx-auto max-w-7xl px-4 py-8">
-			<div className="flex items-center justify-between">
+			<div className="flex flex-col gap-2">
 				<h1 className="flex items-center gap-2 text-3xl font-bold text-gray-900">
 					<Music className="h-8 w-8 text-blue-600" />
-					MM25 Music Library
+					初音ミク「マジカルミライ 2025」楽曲コンテスト
 				</h1>
+				<h2 className="text-lg text-gray-900">非公式楽曲ライブラリー</h2>
 			</div>
 
 			<SongTable songs={songs} />

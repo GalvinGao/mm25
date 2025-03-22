@@ -5,8 +5,9 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-	title: "MM25 - Music Library",
-	description: "Your personal music collection",
+	title: "初音ミク「マジカルミライ 2025」楽曲コンテスト 非公式楽曲ライブラリー",
+	description:
+		"初音ミク「マジカルミライ 2025」楽曲コンテストの非公式楽曲ライブラリーです。",
 };
 
 export default function RootLayout({
@@ -15,7 +16,7 @@ export default function RootLayout({
 	children: React.ReactNode;
 }) {
 	return (
-		<html lang="en" className="h-full">
+		<html lang="ja" className="h-full">
 			<body className={`${inter.className} h-full bg-gray-50`}>
 				<div className="min-h-full">{children}</div>
 			</body>
