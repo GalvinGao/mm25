@@ -1,26 +1,27 @@
+import { Pause, Play } from "lucide-react";
 import type { FC } from "react";
 
 interface AudioPlayerProps {
 	songId: string;
-	title: string;
+	isPlaying: boolean;
+	onPlayPause: (songId: string) => void;
+	audioUrl?: string;
 }
 
-const AudioPlayer: FC<AudioPlayerProps> = ({ songId, title }) => {
+const AudioPlayer: FC<AudioPlayerProps> = ({
+	songId,
+	isPlaying,
+	onPlayPause,
+	audioUrl,
+}) => {
 	return (
-		<audio
-			controls
-			className="w-full"
-			preload="none"
-			src={`/api/audio/${songId}`}
+		<button
+			type="button"
+			onClick={() => onPlayPause(songId)}
+			className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-600 text-white hover:bg-blue-700 transition-colors"
 		>
-			<track
-				kind="captions"
-				src=""
-				label={`Captions for ${title}`}
-				srcLang="en"
-			/>
-			Your browser does not support the audio element.
-		</audio>
+			{isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
+		</button>
 	);
 };
 

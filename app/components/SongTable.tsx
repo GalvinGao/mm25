@@ -1,56 +1,44 @@
 "use client";
 
-import type { Song } from "@prisma/client";
+import type { File, Song } from "@prisma/client";
 import {
 	createColumnHelper,
 	flexRender,
 	getCoreRowModel,
+	getSortedRowModel,
 	useReactTable,
 	type ColumnDef,
+	type SortingState,
 } from "@tanstack/react-table";
-import { Clock, Eye, Pause, Play, ThumbsUp } from "lucide-react";
-import { useRef, useState, type FC } from "react";
+import { ArrowDown, ArrowUp, Clock, Eye, ThumbsUp } from "lucide-react";
+import { useState, type FC } from "react";
+import { useAudioPlayer } from "../hooks/useAudioPlayer";
+import AudioPlayer from "./AudioPlayer";
 
 interface SongTableProps {
-	songs: Song[];
+	songs: (Song & { files: File[] })[];
 }
 
-const columnHelper = createColumnHelper<Song>();
+const columnHelper = createColumnHelper<Song & { files: File[] }>();
 
 const SongTable: FC<SongTableProps> = ({ songs }) => {
-	const [playingSongId, setPlayingSongId] = useState<string | null>(null);
-	const audioRef = useRef<HTMLAudioElement | null>(null);
-
-	const togglePlayPause = (songId: string) => {
-		if (playingSongId === songId) {
-			audioRef.current?.pause();
-			setPlayingSongId(null);
-		} else {
-			if (playingSongId) {
-				audioRef.current?.pause();
-			}
-			setPlayingSongId(songId);
-			audioRef.current = new Audio(`/api/audio/${songId}`);
-			audioRef.current.play();
-		}
-	};
+	const [sorting, setSorting] = useState<SortingState>([]);
+	const { playingSongId, togglePlayPause } = useAudioPlayer();
 
 	const columns = [
 		columnHelper.accessor("title", {
 			header: "Title",
+			sortingFn: "alphanumeric",
 			cell: (info) => (
 				<div className="flex items-center gap-4">
-					<button
-						type="button"
-						onClick={() => togglePlayPause(info.row.original.song_id)}
-						className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-600 text-white hover:bg-blue-700 transition-colors"
-					>
-						{playingSongId === info.row.original.song_id ? (
-							<Pause className="h-4 w-4" />
-						) : (
-							<Play className="h-4 w-4" />
-						)}
-					</button>
+					<AudioPlayer
+						songId={info.row.original.song_id}
+						isPlaying={playingSongId === info.row.original.song_id}
+						onPlayPause={(songId) =>
+							togglePlayPause(songId, info.row.original.files[0]?.url)
+						}
+						audioUrl={info.row.original.files[0]?.url}
+					/>
 					<div>
 						<div className="font-medium text-gray-900">{info.getValue()}</div>
 						<div className="text-sm text-gray-500">
@@ -67,6 +55,7 @@ const SongTable: FC<SongTableProps> = ({ songs }) => {
 					<span>Duration</span>
 				</div>
 			),
+			sortingFn: "alphanumeric",
 			cell: (info) => info.getValue() || "N/A",
 		}),
 		columnHelper.accessor("viewCount", {
@@ -76,6 +65,7 @@ const SongTable: FC<SongTableProps> = ({ songs }) => {
 					<span>Views</span>
 				</div>
 			),
+			sortingFn: "basic",
 			cell: (info) => info.getValue()?.toLocaleString() || "0",
 		}),
 		columnHelper.accessor("likeCount", {
@@ -85,6 +75,7 @@ const SongTable: FC<SongTableProps> = ({ songs }) => {
 					<span>Likes</span>
 				</div>
 			),
+			sortingFn: "basic",
 			cell: (info) => info.getValue()?.toLocaleString() || "0",
 		}),
 	] as ColumnDef<Song>[];
@@ -92,7 +83,12 @@ const SongTable: FC<SongTableProps> = ({ songs }) => {
 	const table = useReactTable({
 		data: songs,
 		columns,
+		state: {
+			sorting,
+		},
+		onSortingChange: setSorting,
 		getCoreRowModel: getCoreRowModel(),
+		getSortedRowModel: getSortedRowModel(),
 	});
 
 	return (
@@ -108,9 +104,28 @@ const SongTable: FC<SongTableProps> = ({ songs }) => {
 											key={header.id}
 											className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
 										>
-											{flexRender(
-												header.column.columnDef.header,
-												header.getContext(),
+											{header.column.getCanSort() ? (
+												<button
+													type="button"
+													className="group inline-flex items-center gap-1"
+													onClick={header.column.getToggleSortingHandler()}
+												>
+													{flexRender(
+														header.column.columnDef.header,
+														header.getContext(),
+													)}
+													<span className="ml-2 flex-none rounded">
+														{{
+															asc: <ArrowUp className="h-4 w-4" />,
+															desc: <ArrowDown className="h-4 w-4" />,
+														}[header.column.getIsSorted() as string] ?? null}
+													</span>
+												</button>
+											) : (
+												flexRender(
+													header.column.columnDef.header,
+													header.getContext(),
+												)
 											)}
 										</th>
 									))}

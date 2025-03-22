@@ -2,6 +2,10 @@ import type { NextRequest } from "next/server";
 import { createReadStream, statSync } from "node:fs";
 import { prisma } from "@/lib/db";
 
+function getFilePath(songId: string) {
+	return `/Users/galvin/Projects/mm25songscrape/downloads/${songId}.mp3`;
+}
+
 export async function GET(
 	request: NextRequest,
 	{ params }: { params: { songId: string } },
@@ -18,11 +22,11 @@ export async function GET(
 
 		const file = await prisma.file.findFirst({
 			where: { 
-				song_id: params.songId,
-				status: "completed" // Only serve completed files
+				songId: params.songId,
+				status: "success" // Only serve completed files
 			},
 			orderBy: {
-				created_at: "desc" // Get the most recent file if multiple exist
+				createdAt: "desc" // Get the most recent file if multiple exist
 			}
 		});
 

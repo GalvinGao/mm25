@@ -7,6 +7,9 @@ export default async function Home() {
 		orderBy: {
 			createdAt: "desc",
 		},
+		include: {
+			files: true,
+		},
 	});
 
 	return (
@@ -14,7 +17,7 @@ export default async function Home() {
 			<div className="flex items-center justify-between">
 				<h1 className="flex items-center gap-2 text-3xl font-bold text-gray-900">
 					<Music className="h-8 w-8 text-blue-600" />
-					Music Library
+					MM25 Music Library
 				</h1>
 			</div>
 
