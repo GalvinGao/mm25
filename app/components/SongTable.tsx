@@ -39,9 +39,25 @@ const SongTable: FC<SongTableProps> = ({ songs }) => {
 						}
 						audioUrl={info.row.original.files[0]?.url}
 					/>
-					<div>
-						<div className="font-medium text-gray-900">{info.getValue()}</div>
-						<div className="text-sm text-gray-500">
+					<div className="flex flex-col gap-1">
+						<div className="font-medium text-gray-900">
+							<a
+								href={`https://piapro.jp/t/${info.row.original.song_id}`}
+								target="_blank"
+								rel="noopener noreferrer"
+								className="hover:text-blue-600 transition-colors underline underline-offset-3 decoration-black/20"
+							>
+								{info.getValue()}
+							</a>
+						</div>
+						<div className="flex items-center gap-1.5 text-sm text-gray-500">
+							{info.row.original.creatorIcon && (
+								<img
+									src={info.row.original.creatorIcon}
+									alt={`${info.row.original.creatorName}'s icon`}
+									className="h-5 w-5 rounded-full object-cover"
+								/>
+							)}
 							{info.row.original.creatorName || "Unknown Artist"}
 						</div>
 					</div>

@@ -13,7 +13,7 @@ export const useAudioPlayer = () => {
         audioRef.current?.pause();
       }
       setPlayingSongId(songId);
-      audioRef.current = new Audio(audioUrl ?? `/api/audio/${songId}`);
+      audioRef.current = new Audio(audioUrl);
       audioRef.current.play();
     }
   };
