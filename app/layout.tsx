@@ -1,8 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
-
-const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
 	title: "初音ミク「マジカルミライ 2025」楽曲コンテスト 非公式楽曲ライブラリー",
@@ -17,9 +14,7 @@ export default function RootLayout({
 }) {
 	return (
 		<html lang="ja" className="h-full">
-			<body className={`${inter.className} h-full bg-gray-50`}>
-				<div className="min-h-full">{children}</div>
-			</body>
+			<body className="h-full bg-gray-50 min-h-full">{children}</body>
 		</html>
 	);
 }
