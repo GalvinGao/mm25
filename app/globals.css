@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+@theme {
+  --color-primary-500: #09c5bb;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -55,4 +59,8 @@
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
   }
+}
+
+:root {
+  font-feature-settings: "halt"
 }

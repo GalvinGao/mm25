@@ -16,7 +16,7 @@ interface AudioControls {
   stop: () => Promise<void>;
 }
 
-export const useAudioPlayer = (audioUrl?: string) => {
+export const useAudioPlayer = (audioUrl?: string, color?: string) => {
   const [state, setState] = useState<AudioState>({
     isPlaying: false,
     isLoading: false,
@@ -65,6 +65,7 @@ export const useAudioPlayer = (audioUrl?: string) => {
       // Update global state
       setGlobalAudioState({
         currentAudioUrl: audioUrl,
+        currentAudioColor: color ?? null,
         isPlaying: true,
       });
 
@@ -136,10 +137,11 @@ export const useAudioPlayer = (audioUrl?: string) => {
       }));
       setGlobalAudioState({
         currentAudioUrl: null,
+        currentAudioColor: null,
         isPlaying: false,
       });
     }
-  }, [audioUrl, cleanup, setGlobalAudioState]);
+  }, [audioUrl, cleanup, setGlobalAudioState, color]);
 
   const pause = useCallback(async () => {
     if (!audioRef.current) return;
@@ -164,6 +166,7 @@ export const useAudioPlayer = (audioUrl?: string) => {
       setState(prev => ({ ...prev, currentTime: 0 }));
       setGlobalAudioState({
         currentAudioUrl: null,
+        currentAudioColor: null,
         isPlaying: false,
       });
     } catch (error) {

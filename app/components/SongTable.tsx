@@ -14,11 +14,18 @@ import { ArrowDown, ArrowUp, Clock, Eye, ThumbsUp } from "lucide-react";
 import { useState, type FC } from "react";
 import AudioPlayer from "./AudioPlayer";
 
+type MergedSong = Song & { files: File[]; color: string };
 interface SongTableProps {
-	songs: (Song & { files: File[] })[];
+	songs: MergedSong[];
 }
 
-const columnHelper = createColumnHelper<Song & { files: File[] }>();
+const columnHelper = createColumnHelper<MergedSong>();
+
+const HeaderCell: FC<{ children: React.ReactNode }> = ({ children }) => {
+	return (
+		<div className="flex items-center gap-1 whitespace-nowrap">{children}</div>
+	);
+};
 
 const SongTable: FC<SongTableProps> = ({ songs }) => {
 	const [sorting, setSorting] = useState<SortingState>([]);
@@ -30,11 +37,11 @@ const SongTable: FC<SongTableProps> = ({ songs }) => {
 			cell: (info) => (
 				<div className="flex items-center gap-4">
 					<AudioPlayer
-						songId={info.row.original.song_id}
 						audioUrl={info.row.original.files[0]?.url}
+						color={info.row.original.color}
 					/>
 					{info.row.original.thumbnail && (
-						<div className="relative aspect-square w-20 overflow-hidden rounded-lg bg-gray-100">
+						<div className="relative aspect-square size-16 overflow-hidden rounded-lg bg-gray-100">
 							<img
 								src={info.row.original.thumbnail}
 								alt={`${info.getValue()}のサムネイル`}
@@ -48,7 +55,7 @@ const SongTable: FC<SongTableProps> = ({ songs }) => {
 								href={`https://piapro.jp/t/${info.row.original.song_id}`}
 								target="_blank"
 								rel="noopener noreferrer"
-								className="hover:text-blue-600 transition-colors underline underline-offset-3 decoration-black/20"
+								className="hover:text-primary-500 transition-colors underline underline-offset-3 decoration-black/20"
 							>
 								{info.getValue()}
 							</a>
@@ -69,10 +76,10 @@ const SongTable: FC<SongTableProps> = ({ songs }) => {
 		}),
 		columnHelper.accessor("duration", {
 			header: () => (
-				<div className="flex items-center gap-1">
+				<HeaderCell>
 					<Clock className="h-4 w-4" />
 					<span>再生時間</span>
-				</div>
+				</HeaderCell>
 			),
 			sortingFn: "alphanumeric",
 			cell: (info) => (
@@ -81,10 +88,10 @@ const SongTable: FC<SongTableProps> = ({ songs }) => {
 		}),
 		columnHelper.accessor("viewCount", {
 			header: () => (
-				<div className="flex items-center gap-1">
+				<HeaderCell>
 					<Eye className="h-4 w-4" />
 					<span>再生回数</span>
-				</div>
+				</HeaderCell>
 			),
 			sortingFn: "basic",
 			cell: (info) => (
@@ -95,10 +102,10 @@ const SongTable: FC<SongTableProps> = ({ songs }) => {
 		}),
 		columnHelper.accessor("likeCount", {
 			header: () => (
-				<div className="flex items-center gap-1">
+				<HeaderCell>
 					<ThumbsUp className="h-4 w-4" />
-					<span>いいね数</span>
-				</div>
+					<span>Likes</span>
+				</HeaderCell>
 			),
 			sortingFn: "basic",
 			cell: (info) => (
@@ -107,7 +114,7 @@ const SongTable: FC<SongTableProps> = ({ songs }) => {
 				</span>
 			),
 		}),
-	] as ColumnDef<Song>[];
+	] as ColumnDef<MergedSong>[];
 
 	const table = useReactTable({
 		data: songs,
@@ -131,7 +138,7 @@ const SongTable: FC<SongTableProps> = ({ songs }) => {
 									{headerGroup.headers.map((header) => (
 										<th
 											key={header.id}
-											className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+											className="px-4 py-3.5 text-left text-sm font-semibold text-gray-900"
 										>
 											{header.column.getCanSort() ? (
 												<button
@@ -167,7 +174,7 @@ const SongTable: FC<SongTableProps> = ({ songs }) => {
 									{row.getVisibleCells().map((cell) => (
 										<td
 											key={cell.id}
-											className="whitespace-nowrap px-3 py-4 text-sm text-gray-500"
+											className="whitespace-nowrap px-4 py-4 text-sm text-gray-500"
 										>
 											{flexRender(
 												cell.column.columnDef.cell,
