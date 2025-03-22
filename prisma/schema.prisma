@@ -1,0 +1,29 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = "postgresql://root:root@localhost:5432/mm25"
+}
+
+model Song {
+    song_id     String    @id @map("song_id")
+    title       String
+    thumbnail   String?
+    creatorName String?   @map("creator_name")
+    creatorIcon String?   @map("creator_icon")
+    creatorUrl  String?   @map("creator_url")
+    lyrics      String?
+    tags        Json?
+    viewCount   Int?      @map("view_count")
+    postedAt    DateTime? @map("posted_at")
+    duration    String?
+    fileSize    String?   @map("file_size")
+    category    String?
+    likeCount   Int?      @map("like_count")
+    createdAt   DateTime  @default(now()) @map("created_at")
+    updatedAt   DateTime  @default(now()) @map("updated_at")
+
+    @@map("songs")
+}
